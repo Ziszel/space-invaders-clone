@@ -29,7 +29,7 @@ https://en.cppreference.com/w/
 The base framework for the game loop is mostly complete; however
 there remain additional elements to implement before completion:
 
-- Fail condition is still pending (The player cannot 'die').
+- ~~Fail condition is still pending (The player cannot 'die').~~
 - The aliens do not speed up, giving the player little challenge.
 - No score; the player cannot accumulate score giving them no target to aim for.
 - No sound; the game currently has no sound effects or music, this is sucky.

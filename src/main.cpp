@@ -113,6 +113,8 @@ int main()
         {
             while (enemies.size() > 0)
             {
+                std::cout << "Enemy y: ";
+                std::cout << (Enemy::y) << "\n";
                 if (IsKeyDown(KEY_A) && player->x > 0)
                 {
                     player->x -= player->speed * deltaTime;
@@ -147,7 +149,7 @@ int main()
                             enemy.Update(deltaTime, screenWidth);
                         }
                     }
-                    movementTimer = 50;
+                    movementTimer = 5;
                 }
                 else
                 {
@@ -161,7 +163,10 @@ int main()
 
                 bulletToAlien(bullets, enemies);
 
-                std::cout << movementTimer << "\n";
+                if (Enemy::y > player->y - enemies.front().h)
+                {
+                    break;
+                }
 
                 // Draw
                 BeginDrawing();
