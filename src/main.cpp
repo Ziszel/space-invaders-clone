@@ -29,7 +29,7 @@ std::vector<Enemy> spawnEnemies()
 // Collision Bounding Box, once working, isolate the code
 // TODO: Once entity system is implemented, update this function to take entities
 // as params
-void bulletToAlien(std::vector<Bullet> &bullets, std::vector<Enemy> &enemies)
+void bulletToAlien(std::vector<Bullet> &bullets, std::vector<Enemy> &enemies, Player *player)
 {
     int collision = 0;
     int tempI;
@@ -44,6 +44,7 @@ void bulletToAlien(std::vector<Bullet> &bullets, std::vector<Enemy> &enemies)
                 bullets[i].y <= enemies[j].y + enemies[j].h &&
                 enemies[j].y <= bullets[i].y + bullets[i].h)
             {
+                player->score += 20;
                 bullets.erase(bullets.begin() + i);
                 enemies.erase(enemies.begin() + j);
             }
@@ -55,6 +56,7 @@ void setupGame(Player *Player, std::vector<Enemy> &enemies, std::vector<Bullet> 
 {
     Player->x = GetScreenWidth() / 2 - 60;
     Player->y = GetScreenHeight() - 40;
+    Player->score = 0;
     enemies = spawnEnemies();
     Enemy::dir = left;
     Enemy::y = 40;
@@ -68,7 +70,7 @@ int main()
     int screenHeight = 650;
     float fps = 60.0f;
     float deltaTime;
-    float movementTimer = 50;
+    float movementTimer = 40;
     gameState gs = mainMenu;
 
     raylib::Color textColor(LIGHTGRAY);
@@ -113,8 +115,6 @@ int main()
         {
             while (enemies.size() > 0)
             {
-                std::cout << "Enemy y: ";
-                std::cout << (Enemy::y) << "\n";
                 if (IsKeyDown(KEY_A) && player->x > 0)
                 {
                     player->x -= player->speed * deltaTime;
@@ -124,7 +124,7 @@ int main()
                     player->x += player->speed * deltaTime;
                 }
 
-                if (IsKeyPressed(KEY_SPACE))
+                if (IsKeyPressed(KEY_SPACE) && bullets.size() < 1)
                 {
                     Bullet bullet(player->x + player->w / 2, player->y);
                     bullets.push_back(bullet);
@@ -149,7 +149,15 @@ int main()
                             enemy.Update(deltaTime, screenWidth);
                         }
                     }
-                    movementTimer = 5;
+                    if (enemies.size() > 2)
+                    {
+                        movementTimer = enemies.size() * 1.2 + enemies.size() - 4;
+                    }
+                    else
+                    {
+                        movementTimer = 0.5;
+                    }
+                    std::cout << movementTimer << "\n";
                 }
                 else
                 {
@@ -161,7 +169,16 @@ int main()
                     bullet.y -= bullet.speed * deltaTime;
                 }
 
-                bulletToAlien(bullets, enemies);
+                bulletToAlien(bullets, enemies, player);
+
+                for (int i = 0; i < bullets.size(); i++)
+                {
+                    if (bullets[i].y < 0)
+                    {
+                        bullets.erase(bullets.begin() + i);
+                    }
+                }
+                
 
                 if (Enemy::y > player->y - enemies.front().h)
                 {
@@ -171,6 +188,8 @@ int main()
                 // Draw
                 BeginDrawing();
                 ClearBackground(BLACK);
+
+                DrawText(TextFormat("Score: %i", player->score), screenWidth - 120, 10, 24, WHITE);
 
                 DrawRectangle(player->x, player->y, player->w, player->h, WHITE);
 
