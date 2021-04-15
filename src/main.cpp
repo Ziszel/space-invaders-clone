@@ -29,7 +29,7 @@ std::vector<Enemy> spawnEnemies()
 // Collision Bounding Box, once working, isolate the code
 // TODO: Once entity system is implemented, update this function to take entities
 // as params
-void bulletToAlien(std::vector<Bullet> &bullets, std::vector<Enemy> &enemies, Player *player)
+void bulletToAlien(std::vector<Bullet> &bullets, std::vector<Enemy> &enemies, Player *player, Sound enemyExplosion)
 {
     int collision = 0;
     int tempI;
@@ -45,6 +45,7 @@ void bulletToAlien(std::vector<Bullet> &bullets, std::vector<Enemy> &enemies, Pl
                 enemies[j].y <= bullets[i].y + bullets[i].h)
             {
                 player->score += 20;
+                PlaySound(enemyExplosion);
                 bullets.erase(bullets.begin() + i);
                 enemies.erase(enemies.begin() + j);
             }
@@ -75,8 +76,15 @@ int main()
 
     raylib::Color textColor(LIGHTGRAY);
     raylib::Window w(screenWidth, screenHeight, "Space Invaders");
-
+    InitAudioDevice();
     SetTargetFPS(fps);
+
+    // Load resources
+    Sound shot = LoadSound("res/sfx/laserShot.wav");
+    Sound enemyExplosion = LoadSound("res/sfx/enemyExplosion.wav");
+    Sound playerExplosion = LoadSound("res/sfx/playerExplosion.wav");
+    Music gameMusic = LoadMusicStream("res/music/space-invaders-tune.wav");
+    PlayMusicStream(gameMusic);
 
     // create game objects
     Player *player = new Player();
@@ -87,11 +95,11 @@ int main()
 
     while (!w.ShouldClose())
     {
-
-        deltaTime = GetFrameTime();
+        UpdateMusicStream(gameMusic);
 
         if (gs == mainMenu)
-        {
+        {   
+
             if (IsKeyPressed(KEY_SPACE))
             {
                 setupGame(player, enemies, bullets);
@@ -115,6 +123,9 @@ int main()
         {
             while (enemies.size() > 0)
             {
+                deltaTime = GetFrameTime();
+                UpdateMusicStream(gameMusic);
+
                 if (IsKeyDown(KEY_A) && player->x > 0)
                 {
                     player->x -= player->speed * deltaTime;
@@ -126,6 +137,7 @@ int main()
 
                 if (IsKeyPressed(KEY_SPACE) && bullets.size() < 1)
                 {
+                    PlaySound(shot);
                     Bullet bullet(player->x + player->w / 2, player->y);
                     bullets.push_back(bullet);
                 }
@@ -157,7 +169,6 @@ int main()
                     {
                         movementTimer = 0.5;
                     }
-                    std::cout << movementTimer << "\n";
                 }
                 else
                 {
@@ -169,7 +180,7 @@ int main()
                     bullet.y -= bullet.speed * deltaTime;
                 }
 
-                bulletToAlien(bullets, enemies, player);
+                bulletToAlien(bullets, enemies, player, enemyExplosion);
 
                 for (int i = 0; i < bullets.size(); i++)
                 {
@@ -182,6 +193,7 @@ int main()
 
                 if (Enemy::y > player->y - enemies.front().h)
                 {
+                    PlaySound(playerExplosion);
                     break;
                 }
 
@@ -229,6 +241,9 @@ int main()
         }
     }
 
+    UnloadSound(shot);
+
+    CloseAudioDevice();
     CloseWindow();
 
     return 0;
