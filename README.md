@@ -32,7 +32,7 @@ there remain additional elements to implement before completion:
 - ~~Fail condition is still pending (The player cannot 'die').~~
 - ~~The aliens do not speed up, giving the player little challenge.~~
 - ~~No score; the player cannot accumulate score giving them no target to aim for.~~
-- No sound; the game currently has no sound effects or music, this is sucky.
+- ~~No sound; the game currently has no sound effects or music, this is sucky.~~
 - Code refactoring:
     - Functions should be split out.
     - Rudimentary entity system would be a nice to have. (composition over inheritance.)
