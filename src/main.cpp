@@ -16,7 +16,7 @@ enum gameState
 Dir Enemy::dir = left;
 float Enemy::y = 40;
 
-void setupGame(Player *Player, std::vector<Enemy> &enemies, std::vector<Bullet> &bullets)
+void setupGame(Player *Player, std::vector<Enemy> &enemies, std::vector<Bullet> &bullets, float &win)
 {
     Player->x = GetScreenWidth() / 2 - 60;
     Player->y = GetScreenHeight() - 40;
@@ -25,6 +25,7 @@ void setupGame(Player *Player, std::vector<Enemy> &enemies, std::vector<Bullet> 
     Enemy::dir = left;
     Enemy::y = 40;
     bullets.clear();
+    win = 0;
 }
 
 int main()
@@ -35,6 +36,7 @@ int main()
     float fps = 60.0f;
     float deltaTime;
     float movementTimer = 40;
+    float win = 0;
     gameState gs = mainMenu;
 
     raylib::Color textColor(LIGHTGRAY);
@@ -43,7 +45,7 @@ int main()
     SetTargetFPS(fps);
 
     // Load resources
-    Sound shot = LoadSound("res/sfx/laserShot.wav");
+    Sound shot = LoadSound("../res/sfx/laserShot.wav");
     Sound enemyExplosion = LoadSound("../res/sfx/enemyExplosion.wav");
     Sound playerExplosion = LoadSound("../res/sfx/playerExplosion.wav");
     Music gameMusic = LoadMusicStream("../res/music/space-invaders-tune.wav");
@@ -51,7 +53,7 @@ int main()
 
     // create game objects
     Player *player = new Player();
-    std::vector<Enemy> enemies = spawnEnemies();
+    std::vector<Enemy> enemies;
     std::vector<Bullet> bullets;
 
     SetWindowPosition(800, 800);
@@ -65,7 +67,7 @@ int main()
 
             if (IsKeyPressed(KEY_SPACE))
             {
-                setupGame(player, enemies, bullets);
+                setupGame(player, enemies, bullets, win);
                 gs = mainGameLoop;
             }
             else if (IsKeyPressed(KEY_C))
@@ -157,6 +159,7 @@ int main()
                 if (Enemy::y > player->y - enemies.front().h)
                 {
                     PlaySound(playerExplosion);
+                    win = 1;
                     break;
                 }
 
@@ -197,8 +200,18 @@ int main()
             BeginDrawing();
             ClearBackground(BLACK);
 
-            DrawText("GAME OVER, PRESS SPACE TO PLAY AGAIN", screenWidth / 2 - 200, screenHeight / 2, 24, WHITE);
-            DrawText("PRESS C TO CLOSE THE GAME", screenWidth / 2 - 200, screenHeight / 2 + 200, 24, WHITE);
+            if (win == 1)
+            {
+                DrawText("You Lose!", screenWidth / 2 - 200, screenHeight / 2 - 200, 24, WHITE);
+                DrawText("GAME OVER, PRESS SPACE TO PLAY AGAIN", screenWidth / 2 - 200, screenHeight / 2, 24, WHITE);
+                DrawText("PRESS C TO CLOSE THE GAME", screenWidth / 2 - 200, screenHeight / 2 + 200, 24, WHITE);
+            }
+            else
+            {
+                DrawText("You Win!", screenWidth / 2 - 200, screenHeight / 2 - 200, 24, WHITE);
+                DrawText("GAME OVER, PRESS SPACE TO PLAY AGAIN", screenWidth / 2 - 200, screenHeight / 2, 24, WHITE);
+                DrawText("PRESS C TO CLOSE THE GAME", screenWidth / 2 - 200, screenHeight / 2 + 200, 24, WHITE);
+            }
 
             EndDrawing();
         }
