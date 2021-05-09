@@ -37,7 +37,7 @@ int main()
     float deltaTime;
     float movementTimer = 40;
     float win = 0;
-    gameState gs = mainMenu;
+    gameState gs = gameOver;
 
     raylib::Color textColor(LIGHTGRAY);
     raylib::Window w(screenWidth, screenHeight, "Space Invaders");
@@ -202,15 +202,17 @@ int main()
 
             if (win == 1)
             {
-                DrawText("You Lose!", screenWidth / 2 - 200, screenHeight / 2 - 200, 24, WHITE);
-                DrawText("GAME OVER, PRESS SPACE TO PLAY AGAIN", screenWidth / 2 - 200, screenHeight / 2, 24, WHITE);
+                DrawText("You Lose!", screenWidth / 2 - 65, screenHeight / 2 - 50, 24, WHITE);
+                DrawText("GAME OVER, PRESS SPACE TO PLAY AGAIN", screenWidth / 2 - 265, screenHeight / 2, 24, WHITE);
                 DrawText("PRESS C TO CLOSE THE GAME", screenWidth / 2 - 200, screenHeight / 2 + 200, 24, WHITE);
+                DrawText(TextFormat("Score: %i", player->score), screenWidth - 120, 10, 24, WHITE);
             }
             else
             {
-                DrawText("You Win!", screenWidth / 2 - 200, screenHeight / 2 - 200, 24, WHITE);
-                DrawText("GAME OVER, PRESS SPACE TO PLAY AGAIN", screenWidth / 2 - 200, screenHeight / 2, 24, WHITE);
+                DrawText("You Win!", screenWidth / 2 - 65, screenHeight / 2 - 50, 24, WHITE);
+                DrawText("GAME OVER, PRESS SPACE TO PLAY AGAIN", screenWidth / 2 - 265, screenHeight / 2, 24, WHITE);
                 DrawText("PRESS C TO CLOSE THE GAME", screenWidth / 2 - 200, screenHeight / 2 + 200, 24, WHITE);
+                DrawText(TextFormat("Score: %i", player->score), screenWidth - 120, 10, 24, WHITE);
             }
 
             EndDrawing();
