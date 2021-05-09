@@ -1,6 +1,6 @@
 #include <iostream>
 #include <vector>
-#include <time.h>
+#include <raylib-cpp.hpp>
 #pragma once
 
 enum Dir {
@@ -19,6 +19,7 @@ public:
     int h = 50;
     float speed = 1600;
     bool isAlive = true;
+    Texture2D texture = LoadTexture("../res/images/invader.png");
     static Dir dir;
 
     Enemy(float x);

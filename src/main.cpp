@@ -44,9 +44,9 @@ int main()
 
     // Load resources
     Sound shot = LoadSound("res/sfx/laserShot.wav");
-    Sound enemyExplosion = LoadSound("res/sfx/enemyExplosion.wav");
-    Sound playerExplosion = LoadSound("res/sfx/playerExplosion.wav");
-    Music gameMusic = LoadMusicStream("res/music/space-invaders-tune.wav");
+    Sound enemyExplosion = LoadSound("../res/sfx/enemyExplosion.wav");
+    Sound playerExplosion = LoadSound("../res/sfx/playerExplosion.wav");
+    Music gameMusic = LoadMusicStream("../res/music/space-invaders-tune.wav");
     PlayMusicStream(gameMusic);
 
     // create game objects
@@ -170,7 +170,7 @@ int main()
 
                 for (auto &enemy : enemies)
                 {
-                    DrawRectangle(enemy.x, enemy.y, enemy.w, enemy.h, DARKGREEN);
+                    DrawTexture(enemy.texture, enemy.x, enemy.y, WHITE);
                 }
 
                 for (auto bullet : bullets)
