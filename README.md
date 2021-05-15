@@ -35,4 +35,5 @@ there remain additional elements to implement before completion:
 - ~~No sound; the game currently has no sound effects or music, this is sucky.~~
 - Code refactoring:
     - ~~Functions should be split out.~~
-    - Rudimentary entity system would be a nice to have. (composition over inheritance.)
+    - ~~Resource Manager to further abstract code.~~
+    - ~~Split out Draw and Update loops to relevant classes.~~
