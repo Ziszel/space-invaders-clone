@@ -3,6 +3,7 @@
 #include "enemy.hpp"
 #include "bullet.hpp"
 #include "bulletToAlien.hpp"
+#include "resourceManager.hpp"
 #include <raylib-cpp.hpp>
 #include <vector>
 
@@ -15,6 +16,9 @@ enum gameState
 
 Dir Enemy::dir = left;
 float Enemy::y = 40;
+
+// Load resources
+ResourceManager rm;
 
 // set all parameters to default for game init and replayability.
 void setupGame(Player *Player, std::vector<Enemy> &enemies, std::vector<Bullet> &bullets, float &win)
@@ -45,12 +49,7 @@ int main()
     InitAudioDevice();
     SetTargetFPS(fps);
 
-    // Load resources
-    Sound shot = LoadSound("../res/sfx/laserShot.wav");
-    Sound enemyExplosion = LoadSound("../res/sfx/enemyExplosion.wav");
-    Sound playerExplosion = LoadSound("../res/sfx/playerExplosion.wav");
-    Music gameMusic = LoadMusicStream("../res/music/space-invaders-tune.wav");
-    PlayMusicStream(gameMusic);
+    PlayMusicStream(rm.gameMusic);
 
     // create game objects
     Player *player = new Player();
@@ -62,7 +61,7 @@ int main()
     while (!w.ShouldClose())
     {
         // no matter what state we are in, the music should play
-        UpdateMusicStream(gameMusic);
+        UpdateMusicStream(rm.gameMusic);
 
         if (gs == mainMenu)
         {   
@@ -93,7 +92,7 @@ int main()
             {
                 // update
                 deltaTime = GetFrameTime();
-                UpdateMusicStream(gameMusic);
+                UpdateMusicStream(rm.gameMusic);
 
                 // update player movement
                 player->Update(deltaTime, screenWidth);
@@ -101,7 +100,7 @@ int main()
                 // Handle bullet firing (only allows one on screen), includes sound
                 if (IsKeyPressed(KEY_SPACE) && bullets.size() < 1)
                 {
-                    PlaySound(shot);
+                    PlaySound(rm.shot);
                     // magic number (10) is half of a bullets width
                     // this centres the bullet to the player.
                     Bullet bullet(player->x + player->w / 2 - 10, player->y);
@@ -118,11 +117,11 @@ int main()
                 }
 
                 // handles bullet to enemy collision
-                bulletToAlien(bullets, enemies, player, enemyExplosion);
+                bulletToAlien(bullets, enemies, player, rm.enemyExplosion);
 
                 if (Enemy::y > player->y - enemies.front().h)
                 {
-                    PlaySound(playerExplosion);
+                    PlaySound(rm.playerExplosion);
                     win = 1;
                     break;
                 }
@@ -187,7 +186,7 @@ int main()
     }
 
     // Unload audio and close devices to ensure safe termination of application.
-    UnloadSound(shot);
+    rm.unloadResources();
 
     CloseAudioDevice();
 
