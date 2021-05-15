@@ -37,3 +37,8 @@ there remain additional elements to implement before completion:
     - ~~Functions should be split out.~~
     - ~~Resource Manager to further abstract code.~~
     - ~~Split out Draw and Update loops to relevant classes.~~
+
+## Remaining Bugs
+
+- Added back in a bug which creates and destroys all enemies on load
+- Player cannot quit a game during main game loop
