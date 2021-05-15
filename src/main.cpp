@@ -95,6 +95,7 @@ int main()
                 deltaTime = GetFrameTime();
                 UpdateMusicStream(gameMusic);
 
+                // update player movement
                 player->Update(deltaTime, screenWidth);
 
                 // Handle bullet firing (only allows one on screen), includes sound
@@ -107,42 +108,9 @@ int main()
                     bullets.push_back(bullet);
                 }
 
-                if (movementTimer <= 0)
-                {
-                    // see if the front (left most enemy) has hit the side
-                    if (Enemy::dir == left && (enemies.front().x - enemies.front().speed * deltaTime) < 0)
-                    {
-                        Enemy::y += 40;
-                        Enemy::dir = right;
-                    }
-                    // see if the back (right most enemy) has hit the side
-                    else if (Enemy::dir == right && (enemies.back().x + enemies.front().speed * deltaTime) > screenWidth - enemies.front().w)
-                    {
-                        Enemy::y += 40;
-                        Enemy::dir = left;
-                    }
-                    else
-                    {
-                        for (auto &enemy : enemies)
-                        {
-                            enemy.Update(deltaTime, screenWidth);
-                        }
-                    }
-                    // if there are more than 2 enemies, speed should be dependant on how many are left, else
-                    // make the enemies really fast!
-                    if (enemies.size() > 2)
-                    {
-                        movementTimer = enemies.size() * 1.2 + enemies.size() - 4;
-                    }
-                    else
-                    {
-                        movementTimer = 0.5;
-                    }
-                }
-                else
-                {
-                    movementTimer--;
-                }
+                // use the enemy at the front of the list to call the update function
+                // (which in turn updates all of them)
+                enemies.front().Update(movementTimer, deltaTime, screenWidth, enemies);
 
                 for (auto bullet : bullets)
                 {

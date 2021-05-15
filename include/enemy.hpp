@@ -30,7 +30,7 @@ public:
         std::cout << "Enemy destroyed!" << std::endl;
     }
 
-    void Update(float dt, int screenWidth);
+    void Update(float &movementTimer, float dt, int screenWidth, std::vector<Enemy> &enemies);
 
     void Move(float dt, int screenWidth);
 
