@@ -10,7 +10,6 @@ enum Dir {
 
 class Enemy
 {
-private:
     
 public:
     float x;
@@ -26,6 +25,7 @@ public:
 
     Enemy();
 
+    // DEBUG: Lets me know when an enemy is being destroyed
     ~Enemy() {
         std::cout << "Enemy destroyed!" << std::endl;
     }
@@ -33,4 +33,6 @@ public:
     void Update(float dt, int screenWidth);
 
     void Move(float dt, int screenWidth);
+
+    void Draw();
 };

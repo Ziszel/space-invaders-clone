@@ -1,8 +1,6 @@
 #include "bulletToAlien.hpp"
 
-// TODO: Once entity system is implemented, update this function to take entities
-// as params
-// Bounding Box Collision
+// Bounding Box Collision for bullets and aliens
 void bulletToAlien(std::vector<Bullet> &bullets, std::vector<Enemy> &enemies, Player *player, Sound enemyExplosion)
 {
     int collision = 0;

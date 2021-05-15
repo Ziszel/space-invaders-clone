@@ -16,6 +16,7 @@ enum gameState
 Dir Enemy::dir = left;
 float Enemy::y = 40;
 
+// set all parameters to default for game init and replayability.
 void setupGame(Player *Player, std::vector<Enemy> &enemies, std::vector<Bullet> &bullets, float &win)
 {
     Player->x = GetScreenWidth() / 2 - 60;
@@ -37,7 +38,7 @@ int main()
     float deltaTime;
     float movementTimer = 40;
     float win = 0;
-    gameState gs = gameOver;
+    gameState gs = mainMenu;
 
     raylib::Color textColor(LIGHTGRAY);
     raylib::Window w(screenWidth, screenHeight, "Space Invaders");
@@ -60,6 +61,7 @@ int main()
 
     while (!w.ShouldClose())
     {
+        // no matter what state we are in, the music should play
         UpdateMusicStream(gameMusic);
 
         if (gs == mainMenu)
@@ -86,11 +88,14 @@ int main()
         }
         else if (gs == mainGameLoop)
         {
+            // main game loop
             while (enemies.size() > 0)
             {
+                // update
                 deltaTime = GetFrameTime();
                 UpdateMusicStream(gameMusic);
 
+                // handle player movement, keeping them within screen limits.
                 if (IsKeyDown(KEY_A) && player->x > 0)
                 {
                     player->x -= player->speed * deltaTime;
@@ -100,6 +105,7 @@ int main()
                     player->x += player->speed * deltaTime;
                 }
 
+                // Handle bullet firing (only allows one on screen), includes sound
                 if (IsKeyPressed(KEY_SPACE) && bullets.size() < 1)
                 {
                     PlaySound(shot);
@@ -109,11 +115,13 @@ int main()
 
                 if (movementTimer <= 0)
                 {
+                    // see if the front (left most enemy) has hit the side
                     if (Enemy::dir == left && (enemies.front().x - enemies.front().speed * deltaTime) < 0)
                     {
                         Enemy::y += 40;
                         Enemy::dir = right;
                     }
+                    // see if the back (right most enemy) has hit the side
                     else if (Enemy::dir == right && (enemies.back().x + enemies.front().speed * deltaTime) > screenWidth - enemies.front().w)
                     {
                         Enemy::y += 40;
@@ -126,6 +134,8 @@ int main()
                             enemy.Update(deltaTime, screenWidth);
                         }
                     }
+                    // if there are more than 2 enemies, speed should be dependant on how many are left, else
+                    // make the enemies really fast!
                     if (enemies.size() > 2)
                     {
                         movementTimer = enemies.size() * 1.2 + enemies.size() - 4;
@@ -173,7 +183,7 @@ int main()
 
                 for (auto &enemy : enemies)
                 {
-                    DrawTexture(enemy.texture, enemy.x, enemy.y, WHITE);
+                    enemy.Draw();
                 }
 
                 for (auto bullet : bullets)
@@ -183,15 +193,17 @@ int main()
 
                 EndDrawing();
             }
-
             gs = gameOver;
         }
+        // Game Over screen/state
         else if (gs == gameOver)
         {
+            // If space is pressed, change to main menu
             if (IsKeyPressed(KEY_SPACE))
             {
                 gs = mainMenu;
             }
+            // If C is pressed, quit game
             else if (IsKeyPressed(KEY_C))
             {
                 break;
@@ -200,6 +212,7 @@ int main()
             BeginDrawing();
             ClearBackground(BLACK);
 
+            // Shows text on screen dependant on whether or not the player shot all the aliens
             if (win == 1)
             {
                 DrawText("You Lose!", screenWidth / 2 - 65, screenHeight / 2 - 50, 24, WHITE);
@@ -219,6 +232,7 @@ int main()
         }
     }
 
+    // Unload audio and close devices to ensure safe termination of application.
     UnloadSound(shot);
 
     CloseAudioDevice();

@@ -1,5 +1,6 @@
 #include "spawnEnemies.hpp"
 
+// create 10 enemy objects (with custom spacing) and return them as a vector.
 std::vector<Enemy> spawnEnemies()
 {
     std::vector<Enemy> enemies;
