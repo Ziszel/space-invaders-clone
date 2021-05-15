@@ -9,11 +9,9 @@ public:
     Sound enemyExplosion;
     Sound playerExplosion; 
     Music gameMusic;
+    Texture2D enemyTexture;
 
-    ResourceManager()
-    {
-        loadResources();
-    }
+    ResourceManager();
 
     void loadResources();
     void unloadResources();

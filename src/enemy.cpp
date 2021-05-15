@@ -1,8 +1,9 @@
 #include "../include/enemy.hpp"
 
-Enemy::Enemy(float x)
+Enemy::Enemy(float x, Texture2D texture)
 {
     this->x = x;
+    this->texture = texture;
 }
 
 Enemy::Enemy()

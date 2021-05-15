@@ -17,7 +17,7 @@ enum gameState
 Dir Enemy::dir = left;
 float Enemy::y = 40;
 
-// Load resources
+// Initialise global resource variables
 ResourceManager rm;
 
 // set all parameters to default for game init and replayability.
@@ -26,7 +26,7 @@ void setupGame(Player *Player, std::vector<Enemy> &enemies, std::vector<Bullet> 
     Player->x = GetScreenWidth() / 2 - 60;
     Player->y = GetScreenHeight() - 40;
     Player->score = 0;
-    enemies = spawnEnemies();
+    enemies = spawnEnemies(rm.enemyTexture);
     Enemy::dir = left;
     Enemy::y = 40;
     bullets.clear();
@@ -43,10 +43,15 @@ int main()
     float movementTimer = 40;
     float win = 0;
     gameState gs = mainMenu;
-
     raylib::Color textColor(LIGHTGRAY);
+
+    // initialise graphics and audio devices
     raylib::Window w(screenWidth, screenHeight, "Space Invaders");
     InitAudioDevice();
+    
+    // load resources
+    rm.loadResources();
+
     SetTargetFPS(fps);
 
     PlayMusicStream(rm.gameMusic);

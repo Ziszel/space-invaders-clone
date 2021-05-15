@@ -1,5 +1,9 @@
 #include "resourceManager.hpp"
 
+ResourceManager::ResourceManager()
+{
+}
+
 void ResourceManager::loadResources()
 {
     // load SFX
@@ -8,6 +12,8 @@ void ResourceManager::loadResources()
     this->playerExplosion = LoadSound("../res/sfx/playerExplosion.wav");
     // load music streams
     this->gameMusic = LoadMusicStream("../res/music/space-invaders-tune.wav");
+    // load texture2D textures
+    this->enemyTexture = LoadTexture("../res/images/invader.png");
 }
 
 void ResourceManager::unloadResources()

@@ -1,3 +1,4 @@
+#include "resourceManager.hpp"
 #include <iostream>
 #include <vector>
 #include <raylib-cpp.hpp>
@@ -18,10 +19,10 @@ public:
     int h = 50;
     float speed = 1600;
     bool isAlive = true;
-    Texture2D texture = LoadTexture("../res/images/invader.png");
+    Texture2D texture;
     static Dir dir;
 
-    Enemy(float x);
+    Enemy(float x, Texture2D texture);
 
     Enemy();
 
