@@ -1,3 +1,4 @@
+#include <raylib-cpp.hpp>
 #pragma once
 
 class Player
@@ -12,6 +13,8 @@ public:
     const int speed = 200;
     int score = 0;
 
-    //Player(float x, float y);
     Player();
+
+    void Update(float deltaTime, int screenWidth);
+    void Draw();
 };

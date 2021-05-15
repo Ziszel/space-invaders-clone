@@ -1,3 +1,5 @@
+#include <raylib-cpp.hpp>
+#include <vector>
 #pragma once
 
 class Bullet
@@ -12,4 +14,8 @@ public:
     int speed = 400;
 
     Bullet(float x, float y);
+
+    void Draw();
+
+    void Update(std::vector<Bullet> &bullets, float deltaTime);
 };

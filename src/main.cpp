@@ -95,21 +95,15 @@ int main()
                 deltaTime = GetFrameTime();
                 UpdateMusicStream(gameMusic);
 
-                // handle player movement, keeping them within screen limits.
-                if (IsKeyDown(KEY_A) && player->x > 0)
-                {
-                    player->x -= player->speed * deltaTime;
-                }
-                else if (IsKeyDown(KEY_D) && player->x < screenWidth - player->w)
-                {
-                    player->x += player->speed * deltaTime;
-                }
+                player->Update(deltaTime, screenWidth);
 
                 // Handle bullet firing (only allows one on screen), includes sound
                 if (IsKeyPressed(KEY_SPACE) && bullets.size() < 1)
                 {
                     PlaySound(shot);
-                    Bullet bullet(player->x + player->w / 2, player->y);
+                    // magic number (10) is half of a bullets width
+                    // this centres the bullet to the player.
+                    Bullet bullet(player->x + player->w / 2 - 10, player->y);
                     bullets.push_back(bullet);
                 }
 
@@ -150,21 +144,13 @@ int main()
                     movementTimer--;
                 }
 
-                for (auto &bullet : bullets)
+                for (auto bullet : bullets)
                 {
-                    bullet.y -= bullet.speed * deltaTime;
+                    bullet.Update(bullets, deltaTime);
                 }
 
+                // handles bullet to enemy collision
                 bulletToAlien(bullets, enemies, player, enemyExplosion);
-
-                for (int i = 0; i < bullets.size(); i++)
-                {
-                    if (bullets[i].y < 0)
-                    {
-                        bullets.erase(bullets.begin() + i);
-                    }
-                }
-                
 
                 if (Enemy::y > player->y - enemies.front().h)
                 {
@@ -179,7 +165,7 @@ int main()
 
                 DrawText(TextFormat("Score: %i", player->score), screenWidth - 120, 10, 24, WHITE);
 
-                DrawRectangle(player->x, player->y, player->w, player->h, WHITE);
+                player->Draw();
 
                 for (auto &enemy : enemies)
                 {
@@ -188,7 +174,7 @@ int main()
 
                 for (auto bullet : bullets)
                 {
-                    DrawRectangle(bullet.x, bullet.y, bullet.w, bullet.h, DARKBLUE);
+                    bullet.Draw();
                 }
 
                 EndDrawing();
