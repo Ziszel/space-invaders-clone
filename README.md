@@ -2,7 +2,7 @@
 
 A space invaders clone built in C++ using the Raylib framework.
 
-The game is verified to work on Debian Linux (Buster)
+The game is verified to work on Debian (Buster) and Arch Linux
 
 You will need to install the following in order to build the program:
 
@@ -14,10 +14,27 @@ You will need to install the following in order to build the program:
 
 ## How to build
 
-```
-g++ -o bin/space-invaders src/*.cpp  -std=c++17 -Iinclude -g -L<path to:libraylib.a> -lraylib -l GL -l m -l pthread -l dl -l rt -l X11
+### Debug
 
 ```
+g++ -o bin/space-invaders src/*.cpp  -std=c++17 -Iinclude -O0 -g -L<path to:libraylib.a> -lraylib -l GL -l m -l pthread -l dl -l rt -l X11
+
+```
+
+### Release
+
+```
+g++ -o bin/space-invaders src/*.cpp  -std=c++17 -Iinclude -O2 -Llib/Linux -lraylib -l GL -l m -l pthread -l dl -l rt -l X11
+
+```
+
+## I don't want to build it!
+
+Ok, ok! You can find a ready to play version to download from here:
+https://ziszle.itch.io/space-invaders
+
+
+Note: Currently only Linux is supported.
 
 ## Resources
 
@@ -40,5 +57,4 @@ there remain additional elements to implement before completion:
 
 ## Remaining Bugs
 
-- Added back in a bug which creates and destroys all enemies on load
-- Player cannot quit a game during main game loop
+None as far as I'm aware! :D

@@ -20,6 +20,17 @@ float Enemy::y = 40;
 // Initialise global resource variables
 ResourceManager rm;
 
+// Allows the user to quit the game prematurely
+bool checkIfQuit(gameState &gs, float &win)
+{
+    if(IsKeyPressed(KEY_Q))
+    {
+        win = 1;
+        return true;
+    }
+    return false;
+}
+
 // set all parameters to default for game init and replayability.
 void setupGame(Player *Player, std::vector<Enemy> &enemies, std::vector<Bullet> &bullets, float &win)
 {
@@ -61,7 +72,8 @@ int main()
     std::vector<Enemy> enemies;
     std::vector<Bullet> bullets;
 
-    SetWindowPosition(800, 800);
+    // Makes sure the default window position is in a playable position regardless of the primary monitor used.
+    SetWindowPosition(GetMonitorWidth(0) / 2 - screenWidth / 2, GetMonitorHeight(0) / 2);
 
     while (!w.ShouldClose())
     {
@@ -95,6 +107,8 @@ int main()
             // main game loop
             while (enemies.size() > 0)
             {
+                if (checkIfQuit(gs, win)) { break; }
+
                 // update
                 deltaTime = GetFrameTime();
                 UpdateMusicStream(rm.gameMusic);
